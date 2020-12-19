@@ -1,4 +1,5 @@
 const User = require('../models/User.model')
+const Product = require('../models/Product.model')
 
 exports.registerUser = (req, res) => {
     const email = req.body.email
@@ -24,7 +25,6 @@ exports.registerUser = (req, res) => {
 }
 
 exports.loginUser = (req, res) => {
-    console.log(req.body)
     const email = req.body.email
     const password = req.body.password
 
@@ -45,6 +45,24 @@ exports.loginUser = (req, res) => {
             res.status(403).json({
                 success: false,
                 msg: 'Credentials do not match. Please, verify your input.'
+            })
+        }
+    })
+}
+
+exports.getProductsByUser = (req, res) => {
+    const userId = req.params.userId
+
+    Product.find({ seller_id: userId }, (err, products) => {
+        if(err) {
+            res.status(500).json({ 
+                success: false, 
+                msg: err 
+            })
+        } else {
+            res.status(200).json({
+                success: true,
+                data: products
             })
         }
     })
