@@ -24,13 +24,19 @@ exports.registerUser = (req, res) => {
 }
 
 exports.loginUser = (req, res) => {
+    console.log(req.body)
     const email = req.body.email
     const password = req.body.password
 
     User.find({ email }, (err, user) => {
-        if(err) res.status(500).json({ success: false, msg: err })
+        if(err) {
+            res.status(500).json({ 
+                success: false, 
+                msg: err 
+            })
+        } 
 
-        if(user.password === password) {
+        if(user[0] && (user[0].password == password)) {
             res.status(200).json({
                 success: true,
                 data: user
