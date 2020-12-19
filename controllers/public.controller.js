@@ -3,20 +3,23 @@ const User = require('../models/User.model')
 exports.registerUser = (req, res) => {
     const email = req.body.email
     const password = req.body.password
+    const isSeller = req.body.isSeller
 
     const newUser = new User({
         email,
         password,
-        accessType: 'buyer'
+        accessType: isSeller ? 'seller' : 'buyer'
     });
-
+    
     newUser.save((err, savedUser) => {
-        if(err) res.status(500).json({ success: false, msg: err })
-
-        res.status(200).json({
-            success: true,
-            data: savedUser
-        })
+        if(err) {
+            res.status(500).json({ success: false, msg: err }) 
+        } else {
+            res.status(200).json({
+                success: true,
+                data: savedUser
+            })
+        }
     })
 }
 
