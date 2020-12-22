@@ -5,13 +5,22 @@ const connectDB = require('./config/db')
 const User = require('./models/User.model')
 const mockUsers = require('./data/user.data')
 
+const Product = require('./models/Product.model')
+const mockProducts = require('./data/products.data')
+
 dotenv.config()
 connectDB()
 
 const importData = async() => {
     try {
         await User.deleteMany()
-        await User.insertMany(mockUsers)
+        const users = await User.insertMany(mockUsers)
+
+        const firstProduct = {...mockProducts[0], seller_id: users[1]._id}
+        const secondProduct = {...mockProducts[1], seller_id: users[1]._id}
+
+        await Product.deleteMany()
+        await Product.insertMany([firstProduct, secondProduct])
 
         console.log('Data imported!')
         process.exit()
